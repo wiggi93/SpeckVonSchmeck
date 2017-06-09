@@ -22,10 +22,6 @@ public class SpectrumResource {
 		Gson gson = new GsonBuilder().create();
 		Spectrum spectrum = gson.fromJson(jsonString, Spectrum.class);
 		SpectrumProducer.sendToKafka(spectrum);
-//		for(Spectrum sp : spectra){
-//			System.out.println("META");
-//			System.out.println(sp.getMeta());
-//		} 
 
 		
 		return Response.ok().build();

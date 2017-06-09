@@ -20,7 +20,7 @@ public class SpectrumProducer {
 
 	public final static String KAFKA_URL = System.getenv("KAFKA_URL") != null ? 
 			System.getenv("KAFKA_URL")
-			: "192.168.178.64:9092";
+			: "localhost:9092";
 			
 	public final static String KAFKA_TOPIC = System.getenv("KAFKA_TOPIC") != null ? 
 			System.getenv("KAFKA_TOPIC")
@@ -28,7 +28,8 @@ public class SpectrumProducer {
 
 			
 	public static void sendToKafka(Spectrum spectrum) {
-		//System.out.println("anfang");
+			
+			System.out.println("LLLLLLLLLLOOOOOOOOOOOOOOOOOLLLLLLLLLLLL");
 			Gson gson= new GsonBuilder().create();
 		
 		
@@ -42,11 +43,8 @@ public class SpectrumProducer {
 			
 			ProducerRecord<String, String> record = new ProducerRecord<String, String>(KAFKA_TOPIC,
 					gson.toJson(spectrum));
-			
+			System.out.println(spectrum.toString());
 			producer.send(record);
-//			i++;
-//			System.out.println(i);
-
 			producer.close();
 			
 			
