@@ -29,7 +29,7 @@ public class SpectrumProducer {
 			
 	public static void sendToKafka(Spectrum spectrum) {
 			
-			System.out.println("LLLLLLLLLLOOOOOOOOOOOOOOOOOLLLLLLLLLLLL");
+			System.out.println("LLLLLLLLLLOOOOOOOOOOOOOOLLLLLLLLLLLL");
 			Gson gson= new GsonBuilder().create();
 		
 		
