@@ -34,7 +34,7 @@ function parserTeppich(contents){
 	    contents = contents.substring(contents.indexOf("\n")+1, contents.length);
 	    spec.charge = contents.substring(contents.indexOf("CHARGE")+7,contents.indexOf("\n",contents.indexOf("CHARGE")));
         contents = contents.substring(contents.indexOf("\n")+1, contents.length);
-        spec.rtInSeconds = contents.substring(contents.indexOf("RTINSECONDS")+12,contents.indexOf("\n",contents.indexOf("RTINSECONDS")));
+        spec.rtinseconds = contents.substring(contents.indexOf("RTINSECONDS")+12,contents.indexOf("\n",contents.indexOf("RTINSECONDS")));
         contents = contents.substring(contents.indexOf("\n")+1, contents.length);
         spec.scans = contents.substring(contents.indexOf("SCANS")+6,contents.indexOf("\n",contents.indexOf("SCANS")));
         contents = contents.substring(contents.indexOf("\n")+1, contents.length);
