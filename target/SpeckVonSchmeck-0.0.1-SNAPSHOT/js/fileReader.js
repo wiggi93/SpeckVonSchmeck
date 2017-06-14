@@ -1,52 +1,57 @@
-function readMultipleFiles(evt) {
-    //Retrieve all the files from the FileList object
-    var files = evt.target.files;
+var _selectedFiles;
 
-    if (files) {
-        for (var i = 0, f; f = files[i]; i++) {
+function getFilesFromEvent(evt) {
+	_selectedFiles = evt.target.files
+    readSelectedFiles();
+}
+
+function readSelectedFiles(){
+	if (_selectedFiles) {
+        for (var i = 0, f; f = _selectedFiles[i]; i++) {
             var r = new FileReader();
             r.onload = (function (f) {
                 return function (e) {
-                    var contents = e.target.result;
-                    parserTeppich(contents);
+                    parseFile(e.target.result);
                 };
             })(f);
             r.readAsText(f);
         }
     } else {
-    	alert("Failed to load files");
+    	console.log("Failed to load selected files");
     }
 }
-document.getElementById('openFile').addEventListener('change', readMultipleFiles, false);
+document.getElementById('openFile').addEventListener('change', getFilesFromEvent, false);
 
 
-function parserTeppich(contents){
-	while(contents.indexOf("BEGIN IONS") >- 1){
+function parseFile(content){
+	while(content.indexOf("BEGIN IONS") >- 1){
 		var spec = new Spectrum();
 		
 		spec.x = [];
 		spec.y = [];
         
-	    contents = contents.substring(contents.indexOf("\n")+1, contents.length);
-	    spec.title = contents.substring(contents.indexOf("TITLE")+6,contents.indexOf("\n",contents.indexOf("TITLE")));
-	    contents = contents.substring(contents.indexOf("\n")+1, contents.length);
-	    spec.pepmass = contents.substring(contents.indexOf("PEPMASS")+8,contents.indexOf("\n",contents.indexOf("PEPMASS")));
-	    contents = contents.substring(contents.indexOf("\n")+1, contents.length);
-	    spec.charge = contents.substring(contents.indexOf("CHARGE")+7,contents.indexOf("\n",contents.indexOf("CHARGE")));
-        contents = contents.substring(contents.indexOf("\n")+1, contents.length);
-        spec.rtInSeconds = contents.substring(contents.indexOf("RTINSECONDS")+12,contents.indexOf("\n",contents.indexOf("RTINSECONDS")));
-        contents = contents.substring(contents.indexOf("\n")+1, contents.length);
-        spec.scans = contents.substring(contents.indexOf("SCANS")+6,contents.indexOf("\n",contents.indexOf("SCANS")));
-        contents = contents.substring(contents.indexOf("\n")+1, contents.length);
+	    content = content.substring(content.indexOf("\n")+1, content.length);
+	    spec.title = content.substring(content.indexOf("TITLE")+6,content.indexOf("\n",content.indexOf("TITLE")));
+	    content = content.substring(content.indexOf("\n")+1, content.length);
+	    spec.pepmass = content.substring(content.indexOf("PEPMASS")+8,content.indexOf("\n",content.indexOf("PEPMASS")));
+	    content = content.substring(content.indexOf("\n")+1, content.length);
+	    spec.charge = content.substring(content.indexOf("CHARGE")+7,content.indexOf("\n",content.indexOf("CHARGE")));
+        content = content.substring(content.indexOf("\n")+1, content.length);
+        spec.rtinseconds = content.substring(content.indexOf("RTINSECONDS")+12,content.indexOf("\n",content.indexOf("RTINSECONDS")));
+        content = content.substring(content.indexOf("\n")+1, content.length);
+        spec.scans = content.substring(content.indexOf("SCANS")+6,content.indexOf("\n",content.indexOf("SCANS")));
+        content = content.substring(content.indexOf("\n")+1, content.length);
 
-        while(contents.indexOf("END IONS")!=0){
-            spec.x.push(contents.substring(0,contents.indexOf(" ")));
-            spec.y.push(contents.substring(contents.indexOf(" ")+1, contents.indexOf("\n")));
-            contents = contents.substring(contents.indexOf("\n")+1, contents.length);
+        while(content.indexOf("END IONS")!=0){
+            spec.x.push(content.substring(0,content.indexOf(" ")));
+            spec.y.push(content.substring(content.indexOf(" ")+1, content.indexOf("\n")));
+            content = content.substring(content.indexOf("\n")+1, content.length);
         }
         
+        
+        
         uploadJson(JSON.stringify(spec));
-        contents=contents.substring(contents.indexOf("BEGIN IONS"), contents.length);
+        content=content.substring(content.indexOf("BEGIN IONS"), content.length);
 
     }
 
@@ -54,16 +59,38 @@ function parserTeppich(contents){
 }
 
 function uploadJson(json){
-	console.log(json);
 	$.ajax({
-    	type:"POST",
+    	type: "POST",
     	contentType: "application/json",
-    	url:"http://localhost:8080/rest/spectra",
-    	data:json,
-    	sucess: function(msg){
-    		alert("nice");
+    	url: "http://localhost:8080/rest/spectrum/sendSpectrum",
+    	data: json,
+    	success: function(msg){
+    		console.log("Success! Data sent.");
     	}
     });
 }
 
+function sendFilesAgain(){
+	if(_selectedFiles != undefined){
+		readSelectedFiles();
+	}
+}
+
+function getSparkInfo(){
+//	$.ajax({
+//    	type: "GET",
+//    	dataType: "application/json",
+//    	url: "http://localhost:8080/rest/spectrum/getSparkInfo",
+//    	success: function(data){
+//    		console.log(data);
+//    	}
+//    });
+	
+	var ws = new WebSocket("ws://localhost:8080/spark");
+	
+	ws.onopen = function(){
+		console.log("Opened!");
+		ws.send("Hello Server");
+	}
+}
 
