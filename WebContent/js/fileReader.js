@@ -1,6 +1,8 @@
 var _selectedFiles;
 var _totalIonsCount = 0;
 var _uploadedIonsCount = 0;
+var _specList = [];
+var _firstSpec = true;
 
 //browse clicked
 function getFilesFromEvent(evt) {
@@ -22,6 +24,7 @@ function enableInputButtons(){
 function readSelectedFiles(){
 	_totalIonsCount = 0;
 	_uploadedIonsCount = 0;
+	_firstSpec = true;
 	$("#progress_bar").css("display", "block");
 	$('.progress-bar').attr('aria-valuenow', 0+'%').css('width', 0+'%');
 	
@@ -73,28 +76,35 @@ function parseFile(content){
             spec.y.push(content.substring(content.indexOf(" ")+1, content.indexOf("\n")));
             content = content.substring(content.indexOf("\n")+1, content.length);
         }
-        uploadJson(JSON.stringify(spec));
+        
         content=content.substring(content.indexOf("BEGIN IONS"), content.length);
+
+        _specList.push(spec);
+        if(_firstSpec == true){
+        	uploadJson();
+        	_firstSpec = false;
+        }
+        	
     }
     
 }
 
-function uploadJson(json){
-	console.log("UPLOAD ---->");
+function uploadJson(){
 	$.ajax({
     	type: "POST",
     	contentType: "application/json",
     	url: "http://localhost:8080/rest/spectrum/sendSpectrum",
-    	data: json,
+    	data: JSON.stringify(_specList.splice(0,1)),
     	cache: false,
     	success: function(msg){
-    		console.log("SUCCESS");
     		_uploadedIonsCount++; 
             let progress = (_uploadedIonsCount / _totalIonsCount) * 100;
             $('.progress-bar').attr('aria-valuenow', (progress)+'%').css('width', progress+'%').text(_uploadedIonsCount+' Ions uploaded.');
-            
             if(_uploadedIonsCount >= _totalIonsCount)
             	enableInputButtons();
+            
+            if(_specList.length > 0)
+            	uploadJson();
     	}
     });
 }

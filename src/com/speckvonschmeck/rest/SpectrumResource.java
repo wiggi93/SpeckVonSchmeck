@@ -33,9 +33,10 @@ public class SpectrumResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response sendSpectrum(String jsonString) {
 		
+		System.out.println(jsonString);
 		Gson gson = new GsonBuilder().create();
-		Spectrum spectrum = gson.fromJson(jsonString, Spectrum.class);
-		SpectrumProducer.sendToKafka(spectrum);
+//		Spectrum spectrum = gson.fromJson(jsonString, Spectrum.class);
+//		SpectrumProducer.sendToKafka(spectrum);
 		
 		
 		return Response.ok().build();
@@ -45,7 +46,6 @@ public class SpectrumResource {
 	@Path("getSparkInfo")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getSparkInfo(){
-		
 
 		String inputLine;
 		

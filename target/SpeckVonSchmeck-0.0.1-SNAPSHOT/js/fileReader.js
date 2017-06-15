@@ -1,15 +1,30 @@
 var _selectedFiles;
 var _totalIonsCount = 0;
 var _uploadedIonsCount = 0;
+var _specList = [];
+var _firstSpec = true;
 
+//browse clicked
 function getFilesFromEvent(evt) {
+	$("#spinner_browse").css("display", "inherit");
+	disableInputButtons();
 	_selectedFiles = evt.target.files
     readSelectedFiles();
+}
+
+function disableInputButtons(){
+	$("#button_send_again").prop('disabled', true);
+}
+
+function enableInputButtons(){
+	$("#button_send_again").prop('disabled', false);
+	$(".spinner").css("display", "none");
 }
 
 function readSelectedFiles(){
 	_totalIonsCount = 0;
 	_uploadedIonsCount = 0;
+	_firstSpec = true;
 	$("#progress_bar").css("display", "block");
 	$('.progress-bar').attr('aria-valuenow', 0+'%').css('width', 0+'%');
 	
@@ -61,29 +76,43 @@ function parseFile(content){
             spec.y.push(content.substring(content.indexOf(" ")+1, content.indexOf("\n")));
             content = content.substring(content.indexOf("\n")+1, content.length);
         }
-        uploadJson(JSON.stringify(spec));
-        content=content.substring(content.indexOf("BEGIN IONS"), content.length);
         
+        content=content.substring(content.indexOf("BEGIN IONS"), content.length);
+
+        _specList.push(spec);
+        if(_firstSpec == true){
+        	uploadJson();
+        	_firstSpec = false;
+        }
+        	
     }
     
 }
 
-function uploadJson(json){
+function uploadJson(){
 	$.ajax({
     	type: "POST",
     	contentType: "application/json",
     	url: "http://localhost:8080/rest/spectrum/sendSpectrum",
-    	data: json,
+    	data: JSON.stringify(_specList.splice(0,1)),
+    	cache: false,
     	success: function(msg){
-    		_uploadedIonsCount++;
+    		_uploadedIonsCount++; 
             let progress = (_uploadedIonsCount / _totalIonsCount) * 100;
             $('.progress-bar').attr('aria-valuenow', (progress)+'%').css('width', progress+'%').text(_uploadedIonsCount+' Ions uploaded.');
+            if(_uploadedIonsCount >= _totalIonsCount)
+            	enableInputButtons();
+            
+            if(_specList.length > 0)
+            	uploadJson();
     	}
     });
 }
 
 function sendFilesAgain(){
 	if(_selectedFiles != undefined){
+		$("#spinner_send_again").css("display", "inherit");
+		disableInputButtons();
 		readSelectedFiles();
 	}
 }
