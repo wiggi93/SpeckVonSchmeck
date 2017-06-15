@@ -94,7 +94,7 @@ function uploadJson(){
     	type: "POST",
     	contentType: "application/json",
     	url: "http://localhost:8080/rest/spectrum/sendSpectrum",
-    	data: JSON.stringify(_specList.splice(0,1)),
+    	data: JSON.stringify(_specList.splice(0,1)[0]),
     	cache: false,
     	success: function(msg){
     		_uploadedIonsCount++; 

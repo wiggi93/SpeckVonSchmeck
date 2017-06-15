@@ -94,12 +94,12 @@ function uploadJson(){
     	type: "POST",
     	contentType: "application/json",
     	url: "http://localhost:8080/rest/spectrum/sendSpectrum",
-    	data: JSON.stringify(_specList.splice(0,1)),
+    	data: JSON.stringify(_specList.splice(0,1)[0]),
     	cache: false,
     	success: function(msg){
     		_uploadedIonsCount++; 
             let progress = (_uploadedIonsCount / _totalIonsCount) * 100;
-            $('.progress-bar').attr('aria-valuenow', (progress)+'%').css('width', progress+'%').text(_uploadedIonsCount+' Ions uploaded.');
+            $('.progress-bar').attr('aria-valuenow', (progress)+'%').css('width', progress+'%').text(_uploadedIonsCount+' Spectra uploaded.');
             if(_uploadedIonsCount >= _totalIonsCount)
             	enableInputButtons();
             
