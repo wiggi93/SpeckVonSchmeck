@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.List;
 
 public class Spectrum implements Serializable{
+	private static final long serialVersionUID = -7935537499853732631L;
+	
 	String charge, pepmass, rtinseconds, scans, title;
 	List<Double> x;
 	List<Double> y;

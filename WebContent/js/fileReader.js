@@ -99,7 +99,7 @@ function uploadJson(){
     	success: function(msg){
     		_uploadedIonsCount++; 
             let progress = (_uploadedIonsCount / _totalIonsCount) * 100;
-            $('.progress-bar').attr('aria-valuenow', (progress)+'%').css('width', progress+'%').text(_uploadedIonsCount+' Ions uploaded.');
+            $('.progress-bar').attr('aria-valuenow', (progress)+'%').css('width', progress+'%').text(_uploadedIonsCount+' Spectra uploaded.');
             if(_uploadedIonsCount >= _totalIonsCount)
             	enableInputButtons();
             
