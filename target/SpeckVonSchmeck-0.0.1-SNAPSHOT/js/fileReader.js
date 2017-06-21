@@ -117,21 +117,3 @@ function sendFilesAgain(){
 	}
 }
 
-function getSparkInfo(){
-//	$.ajax({
-//    	type: "GET",
-//    	dataType: "application/json",
-//    	url: "http://localhost:8080/rest/spectrum/getSparkInfo",
-//    	success: function(data){
-//    		console.log(data);
-//    	}
-//    });
-	
-	var ws = new WebSocket("ws://localhost:8080/spark");
-	
-	ws.onopen = function(){
-		console.log("Opened!");
-		ws.send("Hello Server");
-	}
-}
-

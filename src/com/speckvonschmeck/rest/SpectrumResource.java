@@ -11,6 +11,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -41,9 +42,9 @@ public class SpectrumResource {
 	}
 	
 	@GET
-	@Path("getSparkInfo")
+	@Path("applications")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getSparkInfo(){
+	public Response getRunningApplications(){
 
 		String inputLine;
 		
@@ -58,7 +59,35 @@ public class SpectrumResource {
 			while((inputLine = in.readLine()) != null){
 				response.append(inputLine);
 			}
-			System.out.println(response.toString());
+			in.close();
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return Response.ok(response.toString()).build();
+	}
+	
+	@GET
+	@Path("sparkJobs/{appId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getRunningSparkJobs(@PathParam("appId") String appId){
+		String inputLine;
+		
+		URL url;
+		try {
+			url = new URL("http://localhost:4040/api/v1/applications/"+appId+"/jobs");
+			HttpURLConnection con = (HttpURLConnection) url.openConnection();
+			con.setRequestMethod("GET");
+			
+			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+			
+			while((inputLine = in.readLine()) != null){
+				response.append(inputLine);
+			}
 			in.close();
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block

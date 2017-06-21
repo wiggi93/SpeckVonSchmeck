@@ -3,6 +3,7 @@ var _totalIonsCount = 0;
 var _uploadedIonsCount = 0;
 var _specList = [];
 var _firstSpec = true;
+var _sparkInfoIntervalId;
 
 //browse clicked
 function getFilesFromEvent(evt) {
@@ -83,6 +84,11 @@ function parseFile(content){
         if(_firstSpec == true){
         	uploadJson();
         	_firstSpec = false;
+        	setTimeout(() => {
+        		_sparkInfoIntervalId = setInterval(() => {
+            		getSparkInfo();
+            	}, 500);
+        	}, 2000);
         }
         	
     }
@@ -114,24 +120,6 @@ function sendFilesAgain(){
 		$("#spinner_send_again").css("display", "inherit");
 		disableInputButtons();
 		readSelectedFiles();
-	}
-}
-
-function getSparkInfo(){
-//	$.ajax({
-//    	type: "GET",
-//    	dataType: "application/json",
-//    	url: "http://localhost:8080/rest/spectrum/getSparkInfo",
-//    	success: function(data){
-//    		console.log(data);
-//    	}
-//    });
-	
-	var ws = new WebSocket("ws://localhost:8080/spark");
-	
-	ws.onopen = function(){
-		console.log("Opened!");
-		ws.send("Hello Server");
 	}
 }
 
