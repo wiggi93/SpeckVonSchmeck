@@ -87,8 +87,8 @@ function parseFile(content){
         	setTimeout(() => {
         		_sparkInfoIntervalId = setInterval(() => {
             		getSparkInfo();
-            	}, 500);
-        	}, 2000);
+            	}, 2000);
+        	}, 3000);
         }
         	
     }

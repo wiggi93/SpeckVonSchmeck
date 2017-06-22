@@ -17,6 +17,9 @@ function getRunningApplicationIds(){
 				applicationIds.push(msg[i].id);
 			}
 			getRunningSparkJobs(applicationIds);
+		},
+		error: function(msg){
+			clearInterval(_sparkInfoIntervalId);
 		}
 	});
 }
@@ -29,6 +32,9 @@ function getRunningSparkJobs(ids){
 		cache: false,
 		success: function(msg){
 			displayJobStatus(msg);
+		},
+		error: function(msg){
+			clearInterval(_sparkInfoIntervalId);
 		}
 	});
 }
