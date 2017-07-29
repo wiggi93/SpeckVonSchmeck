@@ -26,21 +26,29 @@ import com.speckvonschmeck.models.Spectrum;
 public class SpectrumResource {
 	
 	StringBuffer response = new StringBuffer();		
-	
+	 
+	/**
+     * This method calls sendToKafka with incoming json
+     *
+     * @param jsonString - single spectrum as json
+     * @return status code 200
+     */
 	@POST
 	@Path("sendSpectrum")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response sendSpectrum(String jsonString) {
 		
-		System.out.println(jsonString);
-		Gson gson = new GsonBuilder().create();
-		Spectrum spectrum = gson.fromJson(jsonString, Spectrum.class);
-		SpectrumProducer.sendToKafka(spectrum);
+		SpectrumProducer.sendToKafka(jsonString);
 		
 		
 		return Response.ok().build();
 	}
 	
+	 /**
+     * This method responses to Frontend with IDs of running Spark Applications
+     *
+     * @return IDs
+     */
 	@GET
 	@Path("applications")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -71,6 +79,12 @@ public class SpectrumResource {
 		return Response.ok(response.toString()).build();
 	}
 	
+	
+	 /**
+     * This method responses to Frontend with currently running Spark Jobs
+     * @param appId - Application ID
+     * @return spark jobs
+     */
 	@GET
 	@Path("sparkJobs/{appId}")
 	@Produces(MediaType.APPLICATION_JSON)

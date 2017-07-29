@@ -3,6 +3,7 @@ var _totalIonsCount = 0;
 var _uploadedIonsCount = 0;
 var _specList = [];
 var _firstSpec = true;
+var _sparkInfoIntervalId;
 
 //browse clicked
 function getFilesFromEvent(evt) {
@@ -83,6 +84,11 @@ function parseFile(content){
         if(_firstSpec == true){
         	uploadJson();
         	_firstSpec = false;
+        	setTimeout(() => {
+        		_sparkInfoIntervalId = setInterval(() => {
+            		getSparkInfo();
+            	}, 2000);
+        	}, 3000);
         }
         	
     }

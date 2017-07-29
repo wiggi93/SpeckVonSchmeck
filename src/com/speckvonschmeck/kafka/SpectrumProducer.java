@@ -14,31 +14,25 @@ import com.speckvonschmeck.models.Spectrum;
 public class SpectrumProducer {
 	static int i=0;
 
-	public final static String KAFKA_URL = System.getenv("KAFKA_URL") != null ? 
-			System.getenv("KAFKA_URL")
-			: "localhost:9092";
-			
-	public final static String KAFKA_TOPIC = System.getenv("KAFKA_TOPIC") != null ? 
-			System.getenv("KAFKA_TOPIC")
-			: "speckvonschmeck";
+	public final static String KAFKA_URL = "localhost:9092";
+	public final static String KAFKA_TOPIC = "speckvonschmeck";
 
+	 /**
+     * This method creates a Kafka Producer
+     * Sends spectrum as json to Kafka Topic
+     *
+     * @param spectrum - spectrum as json
+     */			
+	public static void sendToKafka(String spectrum) {
 			
-	public static void sendToKafka(Spectrum spectrum) {
-			
-			Gson gson= new GsonBuilder().create();
-		
-		
 			Properties props = new Properties();
 			props.put("bootstrap.servers", KAFKA_URL);
 			props.put("key.serializer", StringSerializer.class.getName());
 			props.put("value.serializer", StringSerializer.class.getName());
-			// props.put("advertised.host.name", "192.168.99.100");
 
 			Producer<String, String> producer = new KafkaProducer<String, String>(props);
 			
-			ProducerRecord<String, String> record = new ProducerRecord<String, String>(KAFKA_TOPIC,
-					gson.toJson(spectrum));
-			System.out.println(spectrum.toString());
+			ProducerRecord<String, String> record = new ProducerRecord<String, String>(KAFKA_TOPIC,spectrum);
 			producer.send(record);
 			producer.close();
 			

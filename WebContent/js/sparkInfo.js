@@ -5,6 +5,10 @@ function getSparkInfo(){
 	getRunningApplicationIds();
 }
 
+/**
+ * This method requests spark application ids
+ * 
+ */
 function getRunningApplicationIds(){
 	var applicationIds = [];
 	$.ajax({
@@ -24,6 +28,11 @@ function getRunningApplicationIds(){
 	});
 }
 
+/**
+ * This method requests currently running spark job ids for first application
+ * calls displayJobStatus
+ * 
+ */
 function getRunningSparkJobs(ids){
 	$.ajax({
 		type: "GET",
@@ -39,6 +48,10 @@ function getRunningSparkJobs(ids){
 	});
 }
 
+/**
+ * This method displays currently running spark jobs on web page
+ * 
+ */
 function displayJobStatus(jobArray){
 	var amountRunning = 0;
 	for(var i = 0; i < jobArray.length; i++){

@@ -48,6 +48,13 @@ function readSelectedFiles(){
 }
 document.getElementById('openFile').addEventListener('change', getFilesFromEvent, false);
 
+/**
+ * This method parses the mgf file and maps all spectra to type spectrum.
+ * Spectra are stored in a list
+ * uploadJson is called when first spetrum is parsed
+ *
+ * @param content - content of mgf file
+ */
 
 function parseFile(content){
 	while(content.indexOf("BEGIN IONS") > -1){
@@ -94,6 +101,13 @@ function parseFile(content){
     }
     
 }
+
+/**
+ * This method sends one item of specList to rest interface as json
+ * recursive as long as list isn't empty
+ * progress is set accordingly
+ * 
+ */
 
 function uploadJson(){
 	$.ajax({
